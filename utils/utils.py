@@ -5,7 +5,6 @@ Created on Mon Oct 24 16:34:59 2022
 @author: Guillaume PIROT
 """
 
-from LoopStructural.utils.helper import strike_dip_vector
 from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np

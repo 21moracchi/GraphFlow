@@ -259,10 +259,6 @@ class GraphSim:
         print(f'{datetime.now()} -PLOTTING 3D')
 
 
-    def instantiate_multiple_scenarios(self, list_of_scenario_id, res_type='standard', sim_time = 'first'):
-        for id in list_of_scenario_id:
-            self.instantiate_scenario(id,  res_type=res_type, sim_time = sim_time)
-
     def main(self, scenario, build_graph=False, plot_plume_3D=False,
              compute_data_dict=False, compute_auto_thresh=False, plot=False, compute_similarity = False, plot_graph_3D = False,
              generate_K_field = False, run_MOFLOW = False,
@@ -452,7 +448,7 @@ class GraphSim:
 
             os.makedirs(os.path.join(self.img_folder, 'similarity'), exist_ok = True)
             save_path = os.path.join(self.img_folder, 'similarity', f'{scenario.id}')
-            fig.savefig(save_path,bbox_inches='tight')
+            fig.savefig(save_path,bbox_inches='tight', dpi = 300)
     
     def compute_scores(self, scenario):
         """Computes several scores between cumulative mass distribution and distance distribution. Returns the data as a dict.
@@ -513,7 +509,7 @@ class GraphSim:
     ###   Auto Thresholding
     ################################################################################    
     
-    def compute_histogram(self, scenario:Scenario, bins='auto', plot=False):
+    def compute_histogram(self, scenario:Scenario, bins=1000, plot=False):
         """Computes histogram of the distribution of distances. Softened by gaussian filter.
 
         Args:
@@ -521,25 +517,25 @@ class GraphSim:
             bins (str, optional): _description_. Defaults to 'auto'.
             plot (bool, optional): _description_. Defaults to False.
         """
-        if scenario.counts is None:
-            from scipy.ndimage import gaussian_filter1d
+    
+        from scipy.ndimage import gaussian_filter1d
 
-            scenario.counts, scenario.bins = np.histogram(
-                scenario.ig_map.flatten(), density=True, bins=bins)
-            scenario.counts, scenario.bins = scenario.counts[:-2], scenario.bins[:-2]
-            scenario.counts_b = gaussian_filter1d(scenario.counts, bins/200)
-            if plot:
-                x = scenario.bins[1:]
-                y = scenario.counts
-                y_b = scenario.counts_b
-                fig, ax = plt.subplots()
-                ax.plot(x[:-2], y_b[:-2])
-                ax.set_xlabel('Distances')
-                ax.set_ylabel('Density')
-                ax.ticklabel_format(useMathText=True)
-                os.makedirs(os.path.join(self.img_folder, 'histograms'), exist_ok = True)
-                save_path = os.path.join(self.img_folder,'histograms/' + str(scenario.id))
-                fig.savefig(save_path,bbox_inches='tight')
+        scenario.counts, scenario.bins = np.histogram(
+            scenario.ig_map.flatten(), density=True, bins=bins)
+        scenario.counts, scenario.bins = scenario.counts[:-2], scenario.bins[:-2]
+        scenario.counts_b = gaussian_filter1d(scenario.counts, bins/200)
+        if plot:
+            x = scenario.bins[1:]
+            y = scenario.counts
+            y_b = scenario.counts_b
+            fig, ax = plt.subplots()
+            ax.plot(x[:-2], y_b[:-2])
+            ax.set_xlabel('Distances')
+            ax.set_ylabel('Density')
+            ax.ticklabel_format(useMathText=True)
+            os.makedirs(os.path.join(self.img_folder, 'histograms'), exist_ok = True)
+            save_path = os.path.join(self.img_folder,'histograms/' + str(scenario.id))
+            fig.savefig(save_path,bbox_inches='tight')
 
     def compute_reduced_density(self, scenario:Scenario, plot = False):
         """Computes density (with gaussian KDE) of the distance distribution restrained to the values before the caracteristic peak.
@@ -693,6 +689,7 @@ class GraphSim:
         auto_mask, _, _ = self.compute_auto_thresh(scenario, plot = False)
         
         nb_indices = np.sum(auto_mask >= 1) #The number of paths considered is restricted to the ones who truly reach the significant spots.
+        nb_indices = 100 #other possibility, used in the paper
         sorted_map = np.argsort(scenario.distances_from_ig)
         selected_indices = sorted_map[:nb_indices]
         
@@ -716,8 +713,8 @@ class GraphSim:
                 isomax=nb_indices,
                 opacity=0.7, 
                 surface_count=21,
-                colorscale='Viridis',
-                showscale = False
+                colorscale='Reds',
+                # showscale = False
                 ))
             isomin = 1E0
             isomax = 1E2
@@ -736,11 +733,12 @@ class GraphSim:
                 isomax=isomax,
                 opacity=0.05,
                 surface_count=21,
-                colorscale='Inferno'
+                colorscale='Viridis',
+                showscale = False
                 ))
             camera = dict(
                 center=dict(x=0, y=0, z=0),
-            eye=dict(x=0, y=0, z=-10), up = dict(x=-2,y=0,z=0)
+            eye=dict(x=0, y=-5, z=-7), up = dict(x=-2,y=0,z=0)
 )            
             title = 'Scenario  ' + str(scenario.id)
             fig.update_layout(scene_aspectmode='manual',title_text = title,
