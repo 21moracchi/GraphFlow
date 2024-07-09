@@ -12,14 +12,14 @@ default_parameters_dict['ctm_location'] = np.array([[2011.8216247 , 2950.4636963
        [1703.45524068, 2262.31334044,  512.5       ]])
 default_parameters_dict['location_array'] = np.zeros((10,3))
 default_parameters_dict['location_array'][:,0], default_parameters_dict['location_array'][:,1], default_parameters_dict['location_array'][:,2] = 1050, 2550, 512.5
-# 8 COMBINATIONS OF 3 FAULTS ACTING AS PATH (1) OR BARRIER (0)
-default_parameters_dict['fault_array'] = np.array([[0, 0, 0],
-                                            [0, 0, 1],
-                                            [0, 1, 0],
-                                            [1, 0, 0],
-                                            [0, 1, 1],
-                                            [1, 1, 0],
-                                            [1, 0, 1],
+# 8 COMBINATIONS OF 3 FAULTS ACTING AS PATH (1) OR BARRIER (-1)
+default_parameters_dict['fault_array'] = np.array([[-1, -1, -1],
+                                            [-1, -1, 1],
+                                            [-1, 1, -1],
+                                            [1, -1, -1],
+                                            [-1, 1, 1],
+                                            [1, 1, -1],
+                                            [1, -1, 1],
                                             [1, 1, 1]
                                             ])
 

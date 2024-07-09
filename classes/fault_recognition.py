@@ -1,4 +1,4 @@
-from .graph_simulation import SimWithFault, Scenario
+from .graph_simulation import SimWithFault, Scenario, GraphSim
 import gstools as gs
 import os 
 import numpy as np
@@ -19,7 +19,7 @@ class CrossComparison(SimWithFault):
 
         
         
-    def compute_cross_similarity(self, scenario_ref:Scenario, scenario_test:Scenario):
+    def compute_cross_similarity(self, scenario_ref:Scenario, scenario_test:Scenario ,method = 'graph'):
         """Computes the similarity between the cumulative mass distribution of scenario_ref and the distance distribution of scenario_test.
 
         Args:
@@ -31,13 +31,19 @@ class CrossComparison(SimWithFault):
         self.main(scenario_ref) #pas de generate_K car is on randomise on veut que le principal ne soit pas aleatoire
         self.compute_similarity(scenario_ref)
         self.main(scenario_test,generate_K = True)
+        
         nb_pixels = int(np.sum(scenario_ref.similarity_masks['mf']))
-        mask_test, vec_test = compute_mask_from_nb(
+        
+        if method == 'graph':
+            mask_test, vec_test = compute_mask_from_nb(
             scenario_test.ig_map, nb_pixels, self.dy, self.dz)
+        if method == 'MODFLOW':
+            mask_test, vec_test = compute_mask_from_nb(
+            -scenario_test.mf_map, nb_pixels, self.dy, self.dz)
         jaccard_sim = compute_jaccard_sim(scenario_ref.similarity_masks['mf'],
                                           mask_test)
-        _, NWD = compute_wass_distance(vec_test,
-                                          scenario_ref.similarity_masks['mf_vec'])
+        _, NWD = compute_wass_distance(scenario_ref.similarity_masks['mf_vec'],
+                                       vec_test)
         cross_similarity = (NWD + jaccard_sim)/2
         return cross_similarity, mask_test
 
@@ -73,19 +79,27 @@ class CrossComparison(SimWithFault):
         # fig.savefig(save_path)
         return fig,axs 
     
-    def parallel_cross_comparison(self, list_ids=None):
+    def parallel_cross_comparison(self, list_ids=None, parallel = True, method = 'graph'):
         if list_ids is None:
             list_ids = list(range(80))  # default value
-        function_to_use = self.compute_cross_comparison
-        self.instantiate_multiple_scenarios(list_ids)
-        for k in range(len(list_ids)//4):  # 4 by 4 not to crash the kernel
-            inf, sup = 4*k, min(len(list_ids), 4*k+4)
-            ids_to_run = list_ids[inf:sup]
-            scenarios_to_run = [self.scenarios[i] for i in ids_to_run]
-            with multiprocessing.Pool() as pool:
-                print(' Processing ...' + str(inf) + '...'+ str(sup))
-                self.list_dict_results += pool.map(
-                    function_to_use, scenarios_to_run)
+        
+        for id in list_ids:
+            self.instantiate_scenario(id)
+        if parallel :
+            function_to_use = self.compute_cross_comparison
+            for k in range(len(list_ids)//4):  # 4 by 4 not to crash the kernel
+                inf, sup = 4*k, min(len(list_ids), 4*k+4)
+                ids_to_run = list_ids[inf:sup]
+                scenarios_to_run = [self.scenarios[i] for i in ids_to_run]
+                with multiprocessing.Pool() as pool:
+                    print(' Processing ...' + str(ids_to_run) )
+                    self.list_dict_results += pool.map(
+                        function_to_use, scenarios_to_run)
+        else :
+            for id in list_ids:
+                print(' Processing ...' + str(id) )
+                self.list_dict_results.append(self.compute_cross_comparison(self.scenarios[id], method = method))
+                
         self.to_csv()
 
     def to_csv(self):
@@ -94,7 +108,7 @@ class CrossComparison(SimWithFault):
             path = os.path.join(self.results_folder, f'cross_comparison.csv')
             df.to_csv(path)
     
-    def compute_cross_comparison(self, scenario_ref:Scenario, plot=True, score=True, figure = 'realK'):
+    def compute_cross_comparison(self, scenario_ref:Scenario, plot=True, score=True, figure = 'realK', method = 'graph'):
         """Compares the cumulative mass distribution of a reference scenario (scenario_ref) to the distances of each of the 8 scenarios.
         Computes for each pair the cross similarity and returns it as a dict. 
 
@@ -115,7 +129,7 @@ class CrossComparison(SimWithFault):
             id = 10*flt_id + source_id
             scenario_test = self.instantiate_scenario(id)
             cross_similarity, mask_test = self.compute_cross_similarity(
-                scenario_ref, scenario_test)
+                scenario_ref, scenario_test, method = method)
             cross_similarity_array[flt_id] = cross_similarity
             scenario_dict[flt_id] = scenario_test, mask_test
 

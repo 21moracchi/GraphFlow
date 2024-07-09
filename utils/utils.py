@@ -108,9 +108,9 @@ def buildKmodel(nd_lithocodes,mgd0,mgd1,mgd2,log10Kmu,log10Ksi,nd_topo_faults,fl
     return
 
 def get_nodeid_pt(df_nodes,ptx,pty,ptz,dx,dy,dz):
-    tmpix = np.where((np.abs(df_nodes['X'].values-ptx)<=1.1*dx/2) & 
-                     (np.abs(df_nodes['Y'].values-pty)<=1.1*dy/2) &
-                     (np.abs(df_nodes['Z'].values-ptz)<=1.1*dz/2))
+    tmpix = np.where((np.abs(df_nodes['X'].values-ptx)<dx/2) & 
+                     (np.abs(df_nodes['Y'].values-pty)<dy/2) &
+                     (np.abs(df_nodes['Z'].values-ptz)<dz/2))
     nodeid = df_nodes.loc[tmpix,'id'].values
     return nodeid
 

@@ -65,7 +65,6 @@ class GraphSim:
         scenario.MF_path = os.path.join(self.MF_fd,f'{scenario.id}', f'mf6results_scenario_{scenario.id}.pickle')
         scenario.time_mode = sim_time
         scenario.fltlog10factor_vec = scenario.fault_scenario.copy()
-        scenario.fltlog10factor_vec[scenario.fltlog10factor_vec == 0] = -1
         scenario.fltlog10factor_vec = scenario.fltlog10factor_vec * self.parameters_dict['fltlog10factor']
 
         return scenario    
@@ -435,14 +434,14 @@ class GraphSim:
 
             fig, axs = plt.subplots(1, 2, sharey = True)
             axs[1].imshow(scenario.similarity_masks['ig'], origin='lower')
-            axs[1].set_title(r'Thresh. Distance $X_{dj}$')
+            axs[1].set_title(r'Thresh. distance $X_{d}$')
             axs[1].set_xlabel(r'$y/\Delta y$')
             axs[0].imshow(scenario.similarity_masks['mf'], origin='lower')
-            axs[0].set_title(r'Thresh. Cumulative mass $X_{mf}$ ')
+            axs[0].set_title(r'Thresh. cumulative mass $X_{m}$ ')
             axs[0].set_xlabel(r'$y/\Delta y$')
             axs[0].set_ylabel(r'$z/\Delta z$')
             similarity = round(scenario.scores['similarity'],2)
-            title =  r'$ \mu (X_{mf}, X_{dj}) =$' + f"{round(scenario.scores['similarity'],2)}"
+            title =  r'$ \mu (X_{m}, X_{d}) =$' + f"{round(scenario.scores['similarity'],2)}"
             fig.suptitle(title,
                         y=0.80)
 
