@@ -260,7 +260,7 @@ class GraphSim:
 
     def main(self, scenario, build_graph=False, plot_plume_3D=False,
              compute_data_dict=False, compute_auto_thresh=False, plot=False, compute_similarity = False, plot_graph_3D = False,
-             generate_K_field = False, run_MOFLOW = False,
+             generate_K_field = False, run_MODFLOW = False,
              **kwargs):
         """Main function of the class. Used to carries out different methods/computations in a row. Some of them are not independent.
 
@@ -274,14 +274,14 @@ class GraphSim:
             compute_similarity (bool, optional): _description_. Defaults to False.
             plot_graph_3D (bool, optional): _description_. Defaults to False.
             generate_K_field (bool, optional): _description_. Defaults to False.
-            run_MOFLOW (bool, optional): _description_. Defaults to False.
+            run_MODFLOW (bool, optional): _description_. Defaults to False.
 
         Returns:
             _type_: _description_
         """
         if generate_K_field:
             self.generate_K_field(scenario)
-        if run_MOFLOW:
+        if run_MODFLOW:
             self.run_MODFLOW(scenario)
         self.load_hydro_data(scenario)
         validity = self.get_mass_data(scenario)
