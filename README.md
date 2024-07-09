@@ -5,8 +5,11 @@ ProxyFlow is a Python model to simulate groundwater contaminant transport with g
 ## Requirements
 
 gstools 1.5.1 
+
 flopy 3.3.6 
+
 loopflow 0.0.27   
+
 igraph 0.11.4   
 ## Usage
 
