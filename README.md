@@ -1,6 +1,6 @@
-# MODULE NAME
+# GraphFlow
 
-ProxyFlow is a Python model to simulate groundwater contaminant transport with graph-based methods.
+GraphFlow is a Python model to simulate groundwater contaminant transport with graph-based methods.
 
 ## Versions used by the author
 
