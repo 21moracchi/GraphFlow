@@ -1,5 +1,7 @@
 import numpy as np
 default_parameters_dict = {}
+
+
 default_parameters_dict['ctm_location'] = np.array([[2011.8216247 , 2950.46369633,  512.5       ],
        [1644.15961272, 2948.64944714,  512.5       ],
        [1811.83145201, 2423.32644897,  512.5       ],
@@ -10,6 +12,9 @@ default_parameters_dict['ctm_location'] = np.array([[2011.8216247 , 2950.4636963
        [1803.19482929, 2453.49788948,  512.5       ],
        [1634.04169725, 2403.11298645,  512.5       ],
        [1703.45524068, 2262.31334044,  512.5       ]])
+# source_location = np.array([2000,2500])
+
+# ctm_location[:,0:2] = source_location + radius*random_vectors
 default_parameters_dict['location_array'] = np.zeros((10,3))
 default_parameters_dict['location_array'][:,0], default_parameters_dict['location_array'][:,1], default_parameters_dict['location_array'][:,2] = 1050, 2550, 512.5
 # 8 COMBINATIONS OF 3 FAULTS ACTING AS PATH (1) OR BARRIER (-1)

@@ -315,8 +315,30 @@ class GraphSim:
         if self.verb:
             print(f'{datetime.now()} - END')
 
-    def compute_data_dict(self, scenario, plot = True):
-        """Returns a dict of scores for data analysis"""
+    def compute_data_dict(self, scenario:Scenario, plot = True):
+        """Returns a dict of scores for data analysis. 
+        Args:
+            scenario (Scenario)
+            plot (bool, optional):  Defaults to True.
+
+        Returns:
+            scenario.data_dict (Dict): {id : scenario id,
+            'success' : correct termination,
+            'conc_max' : maximal concentration at the FTA,
+            'min_distance' : minimal Dijkstra distance between outlet and the source,
+            't_sim' : FTA,
+            'ctm_x' : x coordinate of contaminant well,
+            'ctm_y' : y coordinate of contaminant well,
+            'com_distance': distance between the center of masses ,
+            'var': variance of the cumulative mass  ,
+            'jaccard_sim': jaccard similiraty index  ,
+            'wass': wasserstein distance   ,
+            'NWD': Normalized wasserstein distance,
+            'similarity':similarity index mu,
+            'Spearman':Spearman coefficient,
+            'Pearson':Pearson coefficient
+            
+        """
         self.compute_similarity(scenario, plot = plot)
         
         scenario.data_dict = {'id': scenario.id,
@@ -327,11 +349,7 @@ class GraphSim:
                               'ctm_x' : scenario.ctm_ptx,
                               'ctm_y': scenario.ctm_pty}
         scenario.data_dict.update(scenario.scores)
-        sum_mass = np.sum(scenario.mf_map)
-        sum_dist = np.sum(scenario.ig_map)
-        scenario.data_dict['sum_mass'] = sum_mass
-        scenario.data_dict['sum_dist'] = sum_dist
-
+        return scenario.data_dict
    
 
     def parallel_computation(self, list_of_scenario_id, **kwargs):
@@ -788,41 +806,8 @@ class SimWithoutFault(GraphSim):
         self.data_sim = True
         return self.data_sim
             
-    def generate_MGS_dict(self, scenario):
-        """Specific function to retrieve certain data for Random MG simulations.
 
-        Args:
-            scenario (_type_): _description_
-
-        Returns:
-            _type_: _description_
-        """
-        self.compute_dijkstra(scenario)
-        self.compute_similarity(scenario)
-        
-        data_dict = {}
-        
-        flattened_index = np.argmax(scenario.mf_map)
-        [data_dict['max_mf_y'], data_dict['max_mf_z']] = np.array(np.unravel_index(flattened_index, scenario.mf_map.shape))                                                                                                                                                                                                                                                                                                                                             
-        flattened_index = np.argmin(scenario.ig_map)
-        [data_dict['max_ig_y'], data_dict['max_ig_z']] = np.array(np.unravel_index(flattened_index, scenario.ig_map.shape))        
-        
-        data_dict['similarity'] =  scenario.scores['similarity']
-        
-        self.compute_auto_thresh(scenario)
-        
-        data_dict['size_mf'] = np.sum(scenario.auto_masks['mf'] > 0)
-        
-        data_dict['size_ig'] = np.sum(scenario.auto_masks['ig'] > 0)
-        return data_dict
-        
-    def main(self, scenario, MGS_dict = False,  **kwargs):
-        result = super().main(scenario, **kwargs)
-        if result is not None:
-            return result
             
-        if MGS_dict:
-            return self.generate_MGS_dict(scenario)
         
         
 class SimWithFault(GraphSim):
