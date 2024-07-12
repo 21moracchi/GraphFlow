@@ -1,0 +1,10 @@
+data/fault_sim/mgs/
+data/fault_sim/MF_files/
+data/fault_sim/graph_outputs/
+data/fault_sim/real_K/
+data/fault_sim/img/
+data/random_sim/mgs/
+data/random_sim/MF_files/
+data/random_sim/graph_outputs/
+data/random_sim/real_K/
+data/random_sim/img/

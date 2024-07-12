@@ -12,7 +12,6 @@ import pickle
 import sys
 from sklearn.metrics import jaccard_score
 
-sys.path.append('../loop-minex/LoopFlow/')
 from LoopFlow import topological_analysis as ta   
 from LoopFlow import import_triangulation as it
 from LoopFlow import calculate_flow as cf
