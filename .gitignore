@@ -8,3 +8,8 @@ data/random_sim/MF_files/
 data/random_sim/graph_outputs/
 data/random_sim/real_K/
 data/random_sim/img/
+classes/__pycache__/
+utils/__pycache__/
+*/.ipynb_checkpoints/
+manuscript/
+
