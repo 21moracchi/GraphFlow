@@ -1,12 +1,3 @@
-classes/__pycache__/graph_simulation.cpython-38.pyc
-classes/__pycache__/parameters.cpython-38.pyc
-classes/__pycache__/scenario.cpython-38.pyc
-data/random_sim/mgs/mgreal0.pickle
-data/random_sim/mgs/mgreal1.pickle
-data/random_sim/mgs/mgreal2.pickle
-data/random_sim/mgs/mgreal3.pickle
-data/random_sim/mgs/mgreal4.pickle
-utils/__pycache__/utils.cpython-38.pyc
 data/fault_sim/mgs/
 data/fault_sim/MF_files/
 data/fault_sim/graph_outputs/
