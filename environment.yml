@@ -1,0 +1,22 @@
+name: proxyflow
+channels:
+  - conda-forge
+dependencies:
+  - python = 3.9
+  - numpy = 1.20.3
+  - pandas = 1.4.1
+  - jupyter = 1.0.0
+  - notebook
+  - networkx
+  - pip
+  - pip:
+    - scikit-learn == 1.0.2    
+    - gstools == 1.4.0
+    - pot
+    - flopy == 3.3.5
+    - scipy == 1.10.1
+    - plotly == 5.1.0
+    - igraph
+    - loopstructural == 1.4.9
+    - git+https://github.com/Loop3D/LoopFlow.git
+    
