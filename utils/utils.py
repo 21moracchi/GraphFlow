@@ -15,7 +15,6 @@ from sklearn.metrics import jaccard_score
 from LoopFlow import topological_analysis as ta   
 from LoopFlow import import_triangulation as it
 from LoopFlow import calculate_flow as cf
-import networkx as nx
 import os
 import pandas as pd
 import plotly.graph_objects as go
