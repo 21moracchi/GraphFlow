@@ -12,6 +12,7 @@ import pickle
 import sys
 from sklearn.metrics import jaccard_score
 
+import networkx as nx # REQUIRED BY LoopFlow functions
 from LoopFlow import topological_analysis as ta   
 from LoopFlow import import_triangulation as it
 from LoopFlow import calculate_flow as cf
