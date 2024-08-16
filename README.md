@@ -1,5 +1,6 @@
 # GraphFlow
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Loop3D/uncertaintyIndicators/blob/master/LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13328938.svg)](https://doi.org/10.5281/zenodo.13328938)
 
 GraphFlow is a Python workflow to approximate groundwater contaminant transport with graph-based methods.
 
